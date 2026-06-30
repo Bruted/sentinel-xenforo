@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<option_groups>
+  <group group_id="redeyedSentinel" display_order="1000" debug_only="0" advanced="0">
+    <icon>fa-shield-alt</icon>
+  </group>
+</option_groups>

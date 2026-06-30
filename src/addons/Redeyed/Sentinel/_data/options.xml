@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<options>
+  <option option_id="redeyedSiteKey" edit_format="textbox" data_type="string" can_backup="1">
+    <default_value></default_value>
+    <edit_format_params></edit_format_params>
+    <sub_options></sub_options>
+    <relation group_id="redeyedSentinel" display_order="10"/>
+  </option>
+  <option option_id="redeyedApiKey" edit_format="textbox" data_type="string" can_backup="1">
+    <default_value></default_value>
+    <edit_format_params></edit_format_params>
+    <sub_options></sub_options>
+    <relation group_id="redeyedSentinel" display_order="20"/>
+  </option>
+  <option option_id="redeyedBaseUrl" edit_format="textbox" data_type="string" can_backup="1">
+    <default_value>https://redeyed.com</default_value>
+    <edit_format_params></edit_format_params>
+    <sub_options></sub_options>
+    <relation group_id="redeyedSentinel" display_order="30"/>
+  </option>
+</options>

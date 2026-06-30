@@ -1,0 +1,16 @@
+<xf:comment>
+	Redeyed Sentinel CAPTCHA widget.
+	$siteKey / $baseUrl are passed by Redeyed\Sentinel\Captcha\Redeyed::render().
+	Falls back to the raw options if rendered outside that handler.
+</xf:comment>
+<xf:set var="$sentinelSiteKey" value="{{ $siteKey ?: $xf.options.redeyedSiteKey }}" />
+<xf:set var="$sentinelBaseUrl" value="{{ $baseUrl ?: ($xf.options.redeyedBaseUrl ?: 'https://redeyed.com') }}" />
+
+<xf:if is="$sentinelSiteKey">
+	<div class="redeyedSentinel">
+		<script src="{$sentinelBaseUrl}/sentinel.js" async></script>
+		<div class="sentinel-captcha" data-sitekey="{$sentinelSiteKey}"></div>
+	</div>
+<xf:else />
+	<xf:comment>Sentinel not configured: no site key set. Widget intentionally hidden.</xf:comment>
+</xf:if>
