@@ -31,6 +31,33 @@ class Setup extends AbstractSetup
         // Reserved for future upgrades.
     }
 
+    /**
+     * 1.0.1: verification switched from a developer API key (X-Api-Key header)
+     * to a per-site Secret Key posted to /sentinel/siteverify. The option was
+     * renamed redeyedApiKey -> redeyedSecretKey. Carry over any existing value
+     * so upgraded boards keep working, then drop the stale option row.
+     */
+    public function upgrade1000171Step1(): void
+    {
+        $db = $this->db();
+
+        $oldValue = $db->fetchOne(
+            'SELECT option_value FROM xf_option WHERE option_id = ?',
+            'redeyedApiKey'
+        );
+
+        if ($oldValue !== null && $oldValue !== '')
+        {
+            $db->query(
+                'UPDATE xf_option SET option_value = ? WHERE option_id = ?',
+                [$oldValue, 'redeyedSecretKey']
+            );
+        }
+
+        // Remove the obsolete option row (the new options.xml no longer imports it).
+        $db->delete('xf_option', 'option_id = ?', 'redeyedApiKey');
+    }
+
     public function uninstallStep1(): void
     {
         // Options, option group and phrases are removed automatically when the

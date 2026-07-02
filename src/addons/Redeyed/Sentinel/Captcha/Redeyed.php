@@ -9,11 +9,12 @@ use XF\Template\Templater;
  * Redeyed Sentinel CAPTCHA provider.
  *
  * Sentinel is a self-hosted CAPTCHA + IP-reputation service. This handler is
- * free to install and stays INERT (fails open) until both a Site Key and an
- * API Key are configured under Setup -> Options -> Redeyed Sentinel.
+ * free to install and stays INERT (fails open) until a Site Key and a
+ * Secret Key are configured under Setup -> Options -> Redeyed Sentinel.
  *
- * The secret API key is ONLY ever sent in a server-side request header
- * (X-Api-Key) and is never rendered to the page.
+ * Verification uses a reCAPTCHA/Turnstile-style flow: the per-site Secret Key
+ * authenticates the server-side verify call. The Secret Key is ONLY ever sent
+ * in the POST body of that request and is never rendered to the page.
  */
 class Redeyed extends AbstractCaptcha
 {
@@ -48,12 +49,13 @@ class Redeyed extends AbstractCaptcha
     /**
      * Verify the submitted Sentinel token server-side.
      *
-     * Contract:
-     *  - Empty keys => fail open (return true) so the board is never locked out
-     *    before configuration.
-     *  - POST {baseUrl}/api/v1/verify with header X-Api-Key: {apiKey}
-     *    and JSON body {"site_key":"{siteKey}","token":"<sentinel-token>"}.
-     *  - PASSED only when decoded data.success === true OR success === true.
+     * Contract (reCAPTCHA/Turnstile-style siteverify):
+     *  - Empty Secret Key => fail open (return true) so the board is never
+     *    locked out before configuration.
+     *  - POST {baseUrl}/sentinel/siteverify with JSON body
+     *    {"secret":"<secretKey>","response":"<sentinel-token>","remoteip":"<ip>"}.
+     *    No X-Api-Key header is sent; the Secret Key alone authenticates.
+     *  - PASSED only when decoded success === true.
      *
      * @return bool
      */
@@ -61,9 +63,9 @@ class Redeyed extends AbstractCaptcha
     {
         $options = \XF::options();
 
-        $siteKey = isset($options->redeyedSiteKey) ? trim((string) $options->redeyedSiteKey) : '';
-        $apiKey  = isset($options->redeyedApiKey) ? trim((string) $options->redeyedApiKey) : '';
-        $baseUrl = isset($options->redeyedBaseUrl) ? trim((string) $options->redeyedBaseUrl) : '';
+        $siteKey   = isset($options->redeyedSiteKey) ? trim((string) $options->redeyedSiteKey) : '';
+        $secretKey = isset($options->redeyedSecretKey) ? trim((string) $options->redeyedSecretKey) : '';
+        $baseUrl   = isset($options->redeyedBaseUrl) ? trim((string) $options->redeyedBaseUrl) : '';
 
         if ($baseUrl === '')
         {
@@ -71,8 +73,8 @@ class Redeyed extends AbstractCaptcha
         }
         $baseUrl = rtrim($baseUrl, '/');
 
-        // INERT until configured: fail open when either key is missing.
-        if ($siteKey === '' || $apiKey === '')
+        // INERT until configured: fail open when the Secret Key is missing.
+        if ($secretKey === '')
         {
             return true;
         }
@@ -88,16 +90,24 @@ class Redeyed extends AbstractCaptcha
         {
             $client = \XF::app()->http()->client();
 
-            $response = $client->post($baseUrl . '/api/v1/verify', [
+            $payload = [
+                'secret'   => $secretKey,
+                'response' => $token,
+            ];
+
+            // Optional: forward the client IP for reputation scoring.
+            $remoteIp = \XF::app()->request()->getIp();
+            if ($remoteIp !== '')
+            {
+                $payload['remoteip'] = $remoteIp;
+            }
+
+            $response = $client->post($baseUrl . '/sentinel/siteverify', [
                 'headers' => [
-                    'X-Api-Key'    => $apiKey,
                     'Accept'       => 'application/json',
                     'Content-Type' => 'application/json',
                 ],
-                'json' => [
-                    'site_key' => $siteKey,
-                    'token'    => $token,
-                ],
+                'json'            => $payload,
                 'timeout'         => 10,
                 'connect_timeout' => 5,
                 // Never throw on 4xx/5xx; we inspect the body ourselves.
@@ -112,11 +122,7 @@ class Redeyed extends AbstractCaptcha
                 return false;
             }
 
-            if (isset($data['data']['success']) && $data['data']['success'] === true)
-            {
-                return true;
-            }
-
+            // Response shape: {"success": true|false, "outcome": "...", "score": N}
             if (isset($data['success']) && $data['success'] === true)
             {
                 return true;

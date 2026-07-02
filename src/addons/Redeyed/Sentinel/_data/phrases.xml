@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <phrases>
   <phrase title="option_group.redeyedSentinel" version_id="1000070" version_string="1.0.0"><![CDATA[Redeyed Sentinel]]></phrase>
-  <phrase title="option_group.redeyedSentinel_description" version_id="1000070" version_string="1.0.0"><![CDATA[Settings for the Redeyed Sentinel self-hosted CAPTCHA + IP-reputation provider. Free to install; the CAPTCHA stays inert until both a Site Key and an API Key are entered below. Get keys at https://redeyed.com (Lab -> Developer -> Sentinel Sites and Developer -> API Keys).]]></phrase>
+  <phrase title="option_group.redeyedSentinel_description" version_id="1000071" version_string="1.0.1"><![CDATA[Settings for the Redeyed Sentinel self-hosted CAPTCHA + IP-reputation provider. Free to install; the CAPTCHA stays inert until a Site Key and a Secret Key are entered below. Get both keys at https://redeyed.com (Lab -> Sentinel -> Sites); the Secret Key is shown once.]]></phrase>
 
   <phrase title="option.redeyedSiteKey" version_id="1000070" version_string="1.0.0"><![CDATA[Sentinel Site Key (public)]]></phrase>
-  <phrase title="option.redeyedSiteKey_explain" version_id="1000070" version_string="1.0.0"><![CDATA[Your public Sentinel site key. Safe to expose in the page; it is rendered into the captcha widget. Find it in Redeyed Lab -> Developer -> Sentinel Sites.]]></phrase>
+  <phrase title="option.redeyedSiteKey_explain" version_id="1000070" version_string="1.0.0"><![CDATA[Your public Sentinel site key. Safe to expose in the page; it is rendered into the captcha widget. Find it in Redeyed Lab -> Sentinel -> Sites.]]></phrase>
 
-  <phrase title="option.redeyedApiKey" version_id="1000070" version_string="1.0.0"><![CDATA[Sentinel API Key (secret)]]></phrase>
-  <phrase title="option.redeyedApiKey_explain" version_id="1000070" version_string="1.0.0"><![CDATA[Your secret Sentinel API key. Used server-side only (sent as the X-Api-Key header during verification) and never exposed to the browser. Find it in Redeyed Developer -> API Keys. Keep this private.]]></phrase>
+  <phrase title="option.redeyedSecretKey" version_id="1000071" version_string="1.0.1"><![CDATA[Sentinel Secret Key (secret)]]></phrase>
+  <phrase title="option.redeyedSecretKey_explain" version_id="1000071" version_string="1.0.1"><![CDATA[Your per-site Sentinel Secret Key. Used server-side only (sent in the POST body of the siteverify call) and never exposed to the browser. Find it in Redeyed Lab -> Sentinel -> Sites; it is shown only once. Keep this private.]]></phrase>
 
   <phrase title="option.redeyedBaseUrl" version_id="1000070" version_string="1.0.0"><![CDATA[Sentinel Base URL]]></phrase>
   <phrase title="option.redeyedBaseUrl_explain" version_id="1000070" version_string="1.0.0"><![CDATA[Base URL of the Sentinel service. Defaults to https://redeyed.com. Only change this if you run a self-hosted Sentinel instance. No trailing slash needed.]]></phrase>

@@ -5,10 +5,11 @@ as a CAPTCHA provider. Sentinel is a self-hosted CAPTCHA + IP-reputation
 service.
 
 - **Free to install.** No payment required for the add-on.
-- **Inert until configured.** With no keys set, the handler *fails open* (always
-  passes) so your board is never locked out before you finish setup.
-- **Your secret API key is never exposed.** It is used only server-side, sent as
-  the `X-Api-Key` header during verification.
+- **Inert until configured.** With no Secret Key set, the handler *fails open*
+  (always passes) so your board is never locked out before you finish setup.
+- **Your Secret Key is never exposed.** It is used only server-side, sent in the
+  POST body of the `/sentinel/siteverify` call (reCAPTCHA/Turnstile-style). No
+  developer API key is required.
 
 Add-on ID: `Redeyed/Sentinel`
 
@@ -27,7 +28,7 @@ src/addons/Redeyed/Sentinel/
 ├── Captcha/Redeyed.php                         the CAPTCHA handler (render + isValid)
 ├── _data/
 │   ├── option_groups.xml                       "Redeyed Sentinel" options group
-│   ├── options.xml                             redeyedSiteKey / redeyedApiKey / redeyedBaseUrl
+│   ├── options.xml                             redeyedSiteKey / redeyedSecretKey / redeyedBaseUrl
 │   └── phrases.xml                             option + group titles/explanations
 └── _output/templates/public/
     └── captcha_redeyed.html                    widget template (script + captcha div)
@@ -81,13 +82,17 @@ ACP → **Setup → Options → Redeyed Sentinel**:
 
 | Option | Required | Where to get it |
 | --- | --- | --- |
-| **Sentinel Site Key** (`redeyedSiteKey`) | Yes | Redeyed **Lab → Developer → Sentinel Sites** (public, safe to expose) |
-| **Sentinel API Key** (`redeyedApiKey`) | Yes | Redeyed **Developer → API Keys** (secret, server-side only) |
+| **Sentinel Site Key** (`redeyedSiteKey`) | Yes | Redeyed **Lab → Sentinel → Sites** (public, safe to expose) |
+| **Sentinel Secret Key** (`redeyedSecretKey`) | Yes | Redeyed **Lab → Sentinel → Sites** (secret, server-side only — shown once) |
 | **Sentinel Base URL** (`redeyedBaseUrl`) | No (default `https://redeyed.com`) | Only change for a self-hosted Sentinel instance |
 
-Until **both** the Site Key and API Key are filled in, the handler stays inert
-and passes every submission. Once configured it renders the widget and verifies
-each token server-side.
+Both keys come from the same place — **Lab → Sentinel → Sites**. The Site Key is
+public and renders the widget; the Secret Key is displayed only once, so copy it
+when you create the site. **No developer API key is needed.**
+
+Until the Secret Key is filled in, the handler stays inert and passes every
+submission. Once configured it renders the widget and verifies each token
+server-side.
 
 ---
 
@@ -103,16 +108,32 @@ each token server-side.
 The Sentinel script injects a hidden `sentinel-token` input into the form.
 
 **Verify** (`Redeyed::isValid()`) reads `sentinel-token` from the request and
-POSTs to `{baseUrl}/api/v1/verify` using XenForo's HTTP (Guzzle) client:
+POSTs to `{baseUrl}/sentinel/siteverify` using XenForo's HTTP (Guzzle) client
+(a reCAPTCHA/Turnstile-style `siteverify` call — no `X-Api-Key` header):
 
-- Header: `X-Api-Key: {apiKey}`
-- JSON body: `{"site_key":"{siteKey}","token":"<sentinel-token>"}`
+- JSON body: `{"secret":"{secretKey}","response":"<sentinel-token>","remoteip":"<client ip>"}`
+  (`remoteip` is optional)
 
-A submission **passes** only when the decoded response has `data.success === true`
-**or** `success === true`. Missing token or transport failure fails closed;
-unconfigured keys fail open.
+The response has the shape `{"success": true|false, "outcome": "...", "score": N}`.
+A submission **passes** only when `success === true`. Missing token or transport
+failure fails closed; an unconfigured Secret Key fails open.
 
 ---
+
+## Changelog
+
+### 1.0.1
+- **Fixed CAPTCHA verification.** Verification no longer requires a developer API
+  key. It now uses a reCAPTCHA/Turnstile-style flow where each site's own
+  **Secret Key** authenticates the verify call.
+- Renamed the `redeyedApiKey` option → `redeyedSecretKey` ("API Key" → "Secret
+  Key"). Existing values are migrated automatically on upgrade.
+- Verify now POSTs to `{baseUrl}/sentinel/siteverify` with body
+  `{"secret","response","remoteip"}` (no `X-Api-Key` header). Passes when the
+  response `success === true`.
+
+### 1.0.0
+- Initial release.
 
 ## License
 
