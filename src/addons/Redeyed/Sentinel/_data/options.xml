@@ -18,4 +18,28 @@
     <sub_options></sub_options>
     <relation group_id="redeyedSentinel" display_order="30"/>
   </option>
+  <option option_id="sentinelWidget" edit_format="textbox" data_type="string" can_backup="1">
+    <default_value></default_value>
+    <edit_format_params></edit_format_params>
+    <sub_options></sub_options>
+    <relation group_id="redeyedSentinel" display_order="40"/>
+  </option>
+  <option option_id="sentinelTheme" edit_format="textbox" data_type="string" can_backup="1">
+    <default_value></default_value>
+    <edit_format_params></edit_format_params>
+    <sub_options></sub_options>
+    <relation group_id="redeyedSentinel" display_order="50"/>
+  </option>
+  <option option_id="sentinelScheme" edit_format="textbox" data_type="string" can_backup="1">
+    <default_value></default_value>
+    <edit_format_params></edit_format_params>
+    <sub_options></sub_options>
+    <relation group_id="redeyedSentinel" display_order="60"/>
+  </option>
+  <option option_id="sentinelDifficulty" edit_format="textbox" data_type="string" can_backup="1">
+    <default_value></default_value>
+    <edit_format_params></edit_format_params>
+    <sub_options></sub_options>
+    <relation group_id="redeyedSentinel" display_order="70"/>
+  </option>
 </options>

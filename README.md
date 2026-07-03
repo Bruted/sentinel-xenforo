@@ -28,7 +28,7 @@ src/addons/Redeyed/Sentinel/
 ├── Captcha/Redeyed.php                         the CAPTCHA handler (render + isValid)
 ├── _data/
 │   ├── option_groups.xml                       "Redeyed Sentinel" options group
-│   ├── options.xml                             redeyedSiteKey / redeyedSecretKey / redeyedBaseUrl
+│   ├── options.xml                             keys + optional widget customisation (widget/theme/scheme/difficulty)
 │   └── phrases.xml                             option + group titles/explanations
 └── _output/templates/public/
     └── captcha_redeyed.html                    widget template (script + captcha div)
@@ -94,6 +94,26 @@ Until the Secret Key is filled in, the handler stays inert and passes every
 submission. Once configured it renders the widget and verifies each token
 server-side.
 
+### Optional widget customisation
+
+ACP → **Setup → Options → Redeyed Sentinel** also exposes four **optional**
+appearance/behaviour settings. Each is emitted as a `data-*` attribute on the
+captcha element **only when you fill it in** — leave any of them blank to keep
+Sentinel's adaptive defaults. All are backward-compatible; a widget with none of
+them set renders exactly as before.
+
+| Option | Attribute | Accepted values |
+| --- | --- | --- |
+| **Sentinel widget type** (`sentinelWidget`) | `data-widget` | `behavioral`, `checkbox`, `press_hold`, `image_pick`, … (blank = site default) |
+| **Sentinel theme** (`sentinelTheme`) | `data-theme` | `auto`, `light`, `dark` (blank = `auto`) |
+| **Sentinel colour scheme** (`sentinelScheme`) | `data-scheme` | colour scheme / accent (blank = default) |
+| **Sentinel difficulty** (`sentinelDifficulty`) | `data-difficulty` | `easy`, `medium`, `hard`, `max` or `1`–`6` (blank = adaptive) |
+
+> **Difficulty only raises the bar.** `sentinelDifficulty` sets a *minimum*
+> challenge strength: it can only **raise** difficulty above Sentinel's adaptive
+> baseline, never lower it. Leave it blank to let Sentinel scale the challenge
+> per visitor.
+
 ---
 
 ## How it works
@@ -103,6 +123,14 @@ server-side.
 ```html
 <script src="https://redeyed.com/sentinel.js" async></script>
 <div class="sentinel-captcha" data-sitekey="YOUR_SITE_KEY"></div>
+```
+
+When the optional customisation options are set, their `data-*` attributes are
+appended to the same element (only the non-empty ones), e.g.:
+
+```html
+<div class="sentinel-captcha" data-sitekey="YOUR_SITE_KEY"
+     data-widget="checkbox" data-theme="dark" data-difficulty="hard"></div>
 ```
 
 The Sentinel script injects a hidden `sentinel-token` input into the form.
@@ -121,6 +149,16 @@ failure fails closed; an unconfigured Secret Key fails open.
 ---
 
 ## Changelog
+
+### 1.0.2
+- **Added optional widget customisation.** Four new, optional options render as
+  `data-*` attributes on the captcha element only when non-empty, so existing
+  installs are unaffected: **Sentinel widget type** (`sentinelWidget` →
+  `data-widget`), **Sentinel theme** (`sentinelTheme` → `data-theme`), **Sentinel
+  colour scheme** (`sentinelScheme` → `data-scheme`) and **Sentinel difficulty**
+  (`sentinelDifficulty` → `data-difficulty`).
+- `sentinelDifficulty` only **raises** challenge strength above Sentinel's
+  adaptive baseline; it never lowers it. Blank leaves everything adaptive.
 
 ### 1.0.1
 - **Fixed CAPTCHA verification.** Verification no longer requires a developer API

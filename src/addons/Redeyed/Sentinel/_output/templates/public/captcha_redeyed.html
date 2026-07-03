@@ -1,15 +1,21 @@
 <xf:comment>
 	Redeyed Sentinel CAPTCHA widget.
 	$siteKey / $baseUrl are passed by Redeyed\Sentinel\Captcha\Redeyed::render().
+	$widget / $theme / $scheme / $difficulty are the optional widget-customisation
+	values; each is emitted as a data-* attribute only when non-empty.
 	Falls back to the raw options if rendered outside that handler.
 </xf:comment>
 <xf:set var="$sentinelSiteKey" value="{{ $siteKey ?: $xf.options.redeyedSiteKey }}" />
 <xf:set var="$sentinelBaseUrl" value="{{ $baseUrl ?: ($xf.options.redeyedBaseUrl ?: 'https://redeyed.com') }}" />
+<xf:set var="$sentinelWidget" value="{{ $widget ?: $xf.options.sentinelWidget }}" />
+<xf:set var="$sentinelTheme" value="{{ $theme ?: $xf.options.sentinelTheme }}" />
+<xf:set var="$sentinelScheme" value="{{ $scheme ?: $xf.options.sentinelScheme }}" />
+<xf:set var="$sentinelDifficulty" value="{{ $difficulty ?: $xf.options.sentinelDifficulty }}" />
 
 <xf:if is="$sentinelSiteKey">
 	<div class="redeyedSentinel">
 		<script src="{$sentinelBaseUrl}/sentinel.js" async></script>
-		<div class="sentinel-captcha" data-sitekey="{$sentinelSiteKey}"></div>
+		<div class="sentinel-captcha" data-sitekey="{$sentinelSiteKey}"<xf:if is="$sentinelWidget"> data-widget="{$sentinelWidget}"</xf:if><xf:if is="$sentinelTheme"> data-theme="{$sentinelTheme}"</xf:if><xf:if is="$sentinelScheme"> data-scheme="{$sentinelScheme}"</xf:if><xf:if is="$sentinelDifficulty"> data-difficulty="{$sentinelDifficulty}"</xf:if>></div>
 	</div>
 <xf:else />
 	<xf:comment>Sentinel not configured: no site key set. Widget intentionally hidden.</xf:comment>

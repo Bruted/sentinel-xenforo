@@ -11,4 +11,16 @@
 
   <phrase title="option.redeyedBaseUrl" version_id="1000070" version_string="1.0.0"><![CDATA[Sentinel Base URL]]></phrase>
   <phrase title="option.redeyedBaseUrl_explain" version_id="1000070" version_string="1.0.0"><![CDATA[Base URL of the Sentinel service. Defaults to https://redeyed.com. Only change this if you run a self-hosted Sentinel instance. No trailing slash needed.]]></phrase>
+
+  <phrase title="option.sentinelWidget" version_id="1000272" version_string="1.0.2"><![CDATA[Sentinel widget type]]></phrase>
+  <phrase title="option.sentinelWidget_explain" version_id="1000272" version_string="1.0.2"><![CDATA[Optional. Which Sentinel challenge widget to render, e.g. behavioral, checkbox, press_hold or image_pick. Leave blank to use the default configured for your site. Rendered as data-widget on the captcha element.]]></phrase>
+
+  <phrase title="option.sentinelTheme" version_id="1000272" version_string="1.0.2"><![CDATA[Sentinel theme]]></phrase>
+  <phrase title="option.sentinelTheme_explain" version_id="1000272" version_string="1.0.2"><![CDATA[Optional. Widget theme: auto, light or dark. Leave blank to follow the site default (auto, which matches the visitor's system preference). Rendered as data-theme.]]></phrase>
+
+  <phrase title="option.sentinelScheme" version_id="1000272" version_string="1.0.2"><![CDATA[Sentinel colour scheme]]></phrase>
+  <phrase title="option.sentinelScheme_explain" version_id="1000272" version_string="1.0.2"><![CDATA[Optional. Colour scheme / accent used by the widget. Leave blank for the Sentinel default. Rendered as data-scheme.]]></phrase>
+
+  <phrase title="option.sentinelDifficulty" version_id="1000272" version_string="1.0.2"><![CDATA[Sentinel difficulty]]></phrase>
+  <phrase title="option.sentinelDifficulty_explain" version_id="1000272" version_string="1.0.2"><![CDATA[Optional. Minimum challenge strength: easy, medium, hard, max (or 1-6). This only RAISES difficulty above Sentinel's adaptive baseline; it never lowers it. Leave blank to let Sentinel choose adaptively per visitor. Rendered as data-difficulty.]]></phrase>
 </phrases>

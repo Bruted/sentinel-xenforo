@@ -40,9 +40,21 @@ class Redeyed extends AbstractCaptcha
         // Normalise: strip any trailing slash so concatenation is predictable.
         $baseUrl = rtrim($baseUrl, '/');
 
+        // Optional widget customisation. Each is rendered as a data-* attribute
+        // on the captcha element, but ONLY when non-empty, so the widget keeps
+        // its adaptive defaults when these are left blank (backward-compatible).
+        $widget     = isset($options->sentinelWidget) ? trim((string) $options->sentinelWidget) : '';
+        $theme      = isset($options->sentinelTheme) ? trim((string) $options->sentinelTheme) : '';
+        $scheme     = isset($options->sentinelScheme) ? trim((string) $options->sentinelScheme) : '';
+        $difficulty = isset($options->sentinelDifficulty) ? trim((string) $options->sentinelDifficulty) : '';
+
         return $templater->renderTemplate('public:captcha_redeyed', [
-            'siteKey' => $siteKey,
-            'baseUrl' => $baseUrl,
+            'siteKey'    => $siteKey,
+            'baseUrl'    => $baseUrl,
+            'widget'     => $widget,
+            'theme'      => $theme,
+            'scheme'     => $scheme,
+            'difficulty' => $difficulty,
         ]);
     }
 
