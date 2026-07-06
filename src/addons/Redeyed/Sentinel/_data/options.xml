@@ -42,4 +42,10 @@
     <sub_options></sub_options>
     <relation group_id="redeyedSentinel" display_order="70"/>
   </option>
+  <option option_id="sentinelWidth" edit_format="textbox" data_type="string" can_backup="1">
+    <default_value></default_value>
+    <edit_format_params></edit_format_params>
+    <sub_options></sub_options>
+    <relation group_id="redeyedSentinel" display_order="80"/>
+  </option>
 </options>

@@ -23,4 +23,7 @@
 
   <phrase title="option.sentinelDifficulty" version_id="1000272" version_string="1.0.2"><![CDATA[Sentinel difficulty]]></phrase>
   <phrase title="option.sentinelDifficulty_explain" version_id="1000272" version_string="1.0.2"><![CDATA[Optional. Minimum challenge strength: easy, medium, hard, max (or 1-6). This only RAISES difficulty above Sentinel's adaptive baseline; it never lowers it. Leave blank to let Sentinel choose adaptively per visitor. Rendered as data-difficulty.]]></phrase>
+
+  <phrase title="option.sentinelWidth" version_id="1000373" version_string="1.0.3"><![CDATA[Sentinel widget width]]></phrase>
+  <phrase title="option.sentinelWidth_explain" version_id="1000373" version_string="1.0.3"><![CDATA[Optional. Width for the widget container, e.g. full, 100% or 340px. Leave blank to use the Sentinel default width. Rendered as data-width.]]></phrase>
 </phrases>

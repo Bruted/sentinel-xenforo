@@ -47,6 +47,7 @@ class Redeyed extends AbstractCaptcha
         $theme      = isset($options->sentinelTheme) ? trim((string) $options->sentinelTheme) : '';
         $scheme     = isset($options->sentinelScheme) ? trim((string) $options->sentinelScheme) : '';
         $difficulty = isset($options->sentinelDifficulty) ? trim((string) $options->sentinelDifficulty) : '';
+        $width      = isset($options->sentinelWidth) ? trim((string) $options->sentinelWidth) : '';
 
         return $templater->renderTemplate('public:captcha_redeyed', [
             'siteKey'    => $siteKey,
@@ -55,6 +56,7 @@ class Redeyed extends AbstractCaptcha
             'theme'      => $theme,
             'scheme'     => $scheme,
             'difficulty' => $difficulty,
+            'width'      => $width,
         ]);
     }
 

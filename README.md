@@ -108,6 +108,7 @@ them set renders exactly as before.
 | **Sentinel theme** (`sentinelTheme`) | `data-theme` | `auto`, `light`, `dark` (blank = `auto`) |
 | **Sentinel colour scheme** (`sentinelScheme`) | `data-scheme` | colour scheme / accent (blank = default) |
 | **Sentinel difficulty** (`sentinelDifficulty`) | `data-difficulty` | `easy`, `medium`, `hard`, `max` or `1`–`6` (blank = adaptive) |
+| **Sentinel widget width** (`sentinelWidth`) | `data-width` | `full`, `100%`, `340px`, … (blank = default) |
 
 > **Difficulty only raises the bar.** `sentinelDifficulty` sets a *minimum*
 > challenge strength: it can only **raise** difficulty above Sentinel's adaptive
@@ -149,6 +150,11 @@ failure fails closed; an unconfigured Secret Key fails open.
 ---
 
 ## Changelog
+
+### 1.0.3
+- **Added widget Width option.** New optional **Sentinel widget width**
+  (`sentinelWidth` → `data-width`) renders on the captcha element only when set,
+  e.g. `full`, `100%` or `340px`. Backward-compatible; blank leaves the default.
 
 ### 1.0.2
 - **Added optional widget customisation.** Four new, optional options render as
