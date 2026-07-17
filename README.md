@@ -151,6 +151,17 @@ failure fails closed; an unconfigured Secret Key fails open.
 
 ## Changelog
 
+### 1.0.4
+- **Block log.** Blocked submissions (IP, outcome, score) are recorded to
+  XenForo's **server error log** (Admin CP → Logs → Server error log), toggled
+  by the new **Log blocked attempts** option (on by default). The Secret Key is
+  never logged.
+- Note: as a CAPTCHA provider, *which* actions require the widget (registration,
+  contact, guest posting, …) is controlled by XenForo itself — set Redeyed
+  Sentinel as your board CAPTCHA under **Setup → Options → Basic board
+  information → CAPTCHA** — so per-form control is native and needs no add-on
+  option.
+
 ### 1.0.3
 - **Added widget Width option.** New optional **Sentinel widget width**
   (`sentinelWidth` → `data-width`) renders on the captcha element only when set,

@@ -26,4 +26,7 @@
 
   <phrase title="option.sentinelWidth" version_id="1000373" version_string="1.0.3"><![CDATA[Sentinel widget width]]></phrase>
   <phrase title="option.sentinelWidth_explain" version_id="1000373" version_string="1.0.3"><![CDATA[Optional. Width for the widget container, e.g. full, 100% or 340px. Leave blank to use the Sentinel default width. Rendered as data-width.]]></phrase>
+
+  <phrase title="option.sentinelLogBlocks" version_id="1000473" version_string="1.0.4"><![CDATA[Log blocked attempts]]></phrase>
+  <phrase title="option.sentinelLogBlocks_explain" version_id="1000473" version_string="1.0.4"><![CDATA[Record each blocked submission (IP, outcome, score) to the server error log (Admin CP -> Logs -> Server error log) for review. The Secret Key is never logged. On by default.]]></phrase>
 </phrases>

@@ -1,9 +1,9 @@
 {
     "legacy_addon_id": "",
     "title": "Redeyed Sentinel",
-    "description": "Registers the Redeyed Sentinel self-hosted CAPTCHA + IP-reputation provider for XenForo. Free to install; inert until a Site Key and Secret Key are configured.",
-    "version_id": 1000373,
-    "version_string": "1.0.3",
+    "description": "Registers the Redeyed Sentinel self-hosted CAPTCHA + IP-reputation provider for XenForo. Blocked attempts can be logged. Free to install; inert until a Site Key and Secret Key are configured.",
+    "version_id": 1000473,
+    "version_string": "1.0.4",
     "dev": "Redeyed Corporation",
     "dev_url": "https://redeyed.com",
     "faq_url": "",

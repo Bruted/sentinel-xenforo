@@ -93,10 +93,12 @@ class Redeyed extends AbstractCaptcha
             return true;
         }
 
+        $ip    = \XF::app()->request()->getIp();
         $token = (string) $this->filterer->filter('sentinel-token', 'str');
 
         if ($token === '')
         {
+            $this->logBlock($ip, 'missing_token', null);
             return false;
         }
 
@@ -110,10 +112,9 @@ class Redeyed extends AbstractCaptcha
             ];
 
             // Optional: forward the client IP for reputation scoring.
-            $remoteIp = \XF::app()->request()->getIp();
-            if ($remoteIp !== '')
+            if ($ip !== '')
             {
-                $payload['remoteip'] = $remoteIp;
+                $payload['remoteip'] = $ip;
             }
 
             $response = $client->post($baseUrl . '/sentinel/siteverify', [
@@ -128,20 +129,25 @@ class Redeyed extends AbstractCaptcha
                 'http_errors'     => false,
             ]);
 
-            $body = (string) $response->getBody();
-            $data = @json_decode($body, true);
+            $data = @json_decode((string) $response->getBody(), true);
 
             if (!is_array($data))
             {
+                $this->logBlock($ip, 'invalid_response', null);
                 return false;
             }
 
             // Response shape: {"success": true|false, "outcome": "...", "score": N}
-            if (isset($data['success']) && $data['success'] === true)
+            $passed  = isset($data['success']) && $data['success'] === true;
+            $outcome = isset($data['outcome']) ? (string) $data['outcome'] : '';
+            $score   = isset($data['score']) ? (float) $data['score'] : null;
+
+            if ($passed)
             {
                 return true;
             }
 
+            $this->logBlock($ip, $outcome !== '' ? $outcome : 'blocked', $score);
             return false;
         }
         catch (\Exception $e)
@@ -149,7 +155,34 @@ class Redeyed extends AbstractCaptcha
             \XF::logException($e, false, 'Redeyed Sentinel CAPTCHA verification error: ');
 
             // Network/transport failure => treat as not verified (fail closed).
+            $this->logBlock($ip, 'error', null);
             return false;
         }
+    }
+
+    /**
+     * Record a blocked attempt to XenForo's server error log (Admin CP -> Logs
+     * -> Server error log) when logging is enabled. The Secret Key is never
+     * logged. Uses XenForo's native logging rather than a custom table.
+     *
+     * @param string     $ip
+     * @param string     $outcome
+     * @param float|null $score
+     */
+    protected function logBlock($ip, $outcome, $score)
+    {
+        $options = \XF::options();
+        $enabled = isset($options->sentinelLogBlocks) ? (bool) $options->sentinelLogBlocks : true;
+        if (!$enabled)
+        {
+            return;
+        }
+
+        \XF::logError(sprintf(
+            'Redeyed Sentinel blocked a submission from %s (outcome: %s, score: %s)',
+            $ip !== '' ? $ip : 'unknown',
+            $outcome !== '' ? $outcome : 'n/a',
+            $score === null ? 'n/a' : (string) $score
+        ));
     }
 }
